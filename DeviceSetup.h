@@ -1,6 +1,9 @@
 #ifndef DEVICE_SETUP_H
 #define DEVICE_SETUP_H
 
+#include "src/BipolarStepper/BipolarStepper.h"
+#include "src/UnipolarStepper/UnipolarStepper.h"
+
 // ===========================
 // Define Bipolar Stepper Motor Driver pins
 // ===========================
@@ -22,6 +25,11 @@
 // Define Servo pins
 // ===========================
 #define SERVO_PIN (32)
+
+// ===========================
+// Declare motor instances
+// ===========================
+
 
 
 #endif
