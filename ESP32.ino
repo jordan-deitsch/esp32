@@ -4,13 +4,6 @@
 #include "src/UnipolarStepper/UnipolarStepper.h"
 #include <ESP32Servo.h>
 
-
-// Servo control: published values for SG90 servos, adjust if needed
-Servo myservo;
-int minUs = 1000;
-int maxUs = 2000;
-int pos = 0;      // servo position in degrees
-
 void setup() {
   // Allow allocation of all timers
 	ESP32PWM::allocateTimer(0);
@@ -18,7 +11,8 @@ void setup() {
 	ESP32PWM::allocateTimer(2);
 	ESP32PWM::allocateTimer(3);
 	myservo.setPeriodHertz(50);    // standard 50 hz servo
-	myservo.attach(SERVO_PIN, minUs, maxUs);
+	myservo.attach(SERVO_PIN, SERVO_MIN_US, SERVO_MAX_US);
+  myservo.write(servo_angle);
 
   // Setup serial port
   Serial.begin(115200);

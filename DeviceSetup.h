@@ -3,6 +3,7 @@
 
 #include "src/BipolarStepper/BipolarStepper.h"
 #include "src/UnipolarStepper/UnipolarStepper.h"
+#include <ESP32Servo.h>
 
 // ===========================
 // Define Bipolar Stepper Motor Driver pins
@@ -22,15 +23,19 @@
 #define COIL_D_PIN (18)
 
 // ===========================
-// Define Servo pins
+// Define Servo pins and timing values
 // ===========================
 #define SERVO_PIN (32)
+#define SERVO_MIN_US (1000)
+#define SERVO_MAX_US (2000)
 
 // ===========================
 // Declare motor instances
 // ===========================
 extern BipolarStepper bipolar_stepper;
 extern UnipolarStepper unipolar_stepper;
+extern Servo myservo;
+extern int servo_angle;      // servo position in degrees
 
 
 #endif

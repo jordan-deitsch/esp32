@@ -101,6 +101,14 @@ const char webpage[] PROGMEM = R"rawliteral(
         button:active {
             background-color: #174477;
         }
+
+        input[type="range"] {
+            width: 90%;
+            max-width: 350px;
+            cursor: pointer;
+            accent-color: #2878d0;
+        }
+
     </style>
 
 </head>
@@ -145,6 +153,25 @@ const char webpage[] PROGMEM = R"rawliteral(
         </button>
     </div>
 
+    <div class="motor">
+        <h2>Servo 1</h2>
+
+        <p>
+            Position: <span id="servoValue">90</span>&deg;
+        </p>
+
+        <input
+            type="range"
+            id="servoSlider"
+            min="0"
+            max="180"
+            value="90"
+            step="1"
+            oninput="updateServo(this.value)"
+        >
+
+    </div>
+
     <script>
 
         function startMotor(id, direction, event) {
@@ -157,6 +184,23 @@ const char webpage[] PROGMEM = R"rawliteral(
         function stopMotor(id) {
 
             fetch('/stop?id=' + id);
+        }
+
+        let servoTimer = null;
+        let pendingAngle = 90;
+
+        function updateServo(angle) {
+
+            document.getElementById("servoValue").textContent = angle;
+            pendingAngle = angle;
+
+            if (servoTimer === null) {
+
+                servoTimer = setTimeout(() => {
+                    fetch('/servo?angle=' + pendingAngle);
+                    servoTimer = null;
+                }, 50);
+            }
         }
 
     </script>
@@ -216,6 +260,26 @@ void handleStop()
     server.send(200, "text/plain", "Motor stopped");
 }
 
+void handleServo()
+{
+    if (!server.hasArg("angle")) {
+        server.send(400, "text/plain", "Missing angle");
+        return;
+    }
+
+    int angle = server.arg("angle").toInt();
+
+    if (angle < 0 || angle > 180) {
+        server.send(400, "text/plain", "Invalid angle");
+        return;
+    }
+
+    myservo.write(angle);
+    servo_angle = angle;
+
+    server.send(200, "text/plain", "Servo position updated");
+}
+
 // ==========================================
 // Setup
 // ==========================================
@@ -242,6 +306,7 @@ void Website_setup()
     server.on("/", HTTP_GET, handleRoot);
     server.on("/motor", HTTP_GET, handleMotor);
     server.on("/stop", HTTP_GET, handleStop);
+    server.on("/servo", HTTP_GET, handleServo);
 
     // Start web server
     server.begin();
