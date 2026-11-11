@@ -13,11 +13,11 @@ public:
     int coil_d_pin);
 
   // Public instance variables
-  
+  bool continuous;
 
   // Public functions
   void step(unsigned long steps);
-  void set_direction(bool dir);
+  void set_direction(int dir);
     
 
 private:
@@ -25,7 +25,7 @@ private:
   int coil_b_pin;
   int coil_c_pin;
   int coil_d_pin;
-  bool direction;
+  int direction;
   uint8_t position;  // DD_CC_BB_AA
   signed long number_of_steps;
 

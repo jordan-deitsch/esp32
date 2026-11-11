@@ -18,6 +18,7 @@ UnipolarStepper::UnipolarStepper(
 
   position = UNIPOLAR_COIL_A_MASK;  // Initialize position
   number_of_steps = 0;  // Initialize step counter
+  continuous = false; // Initialize to not run in continuous mode
 
   // Set pin mode for all control pins
   pinMode(coil_a_pin, OUTPUT);
@@ -25,28 +26,29 @@ UnipolarStepper::UnipolarStepper(
   pinMode(coil_c_pin, OUTPUT);
   pinMode(coil_d_pin, OUTPUT);
 
-  set_direction(true); // Set default direction
+  set_direction(1); // Set default direction
   drive_output(); // Initialize output coils
 }
 
 
 // Set motor direction
-void UnipolarStepper::set_direction(bool dir) {
-  direction = dir;
+void UnipolarStepper::set_direction(int dir) {
+  if (dir == 1 || dir == -1) direction = dir;
+  else Serial.println("ERROR: Stepper motor invalid direction");
 }
 
 
 // Generate step pulses
 void UnipolarStepper::step(unsigned long steps) {
   for (unsigned long i = 0; i < steps; i++) {
-    if (direction) {
+    if (direction == 1) {
       position = (position << 1) | (position >> 7);
-      number_of_steps++;
     }
-    else {
+    else if (direction == -1) {
       position = (position >> 1) | (position << 7);
-      number_of_steps--;
     }
+    
+    number_of_steps = number_of_steps + direction;
 
     drive_output();
     delayMicroseconds(500);

@@ -29,7 +29,8 @@
 // ===========================
 // Declare motor instances
 // ===========================
-
+extern BipolarStepper bipolar_stepper;
+extern UnipolarStepper unipolar_stepper;
 
 
 #endif

@@ -22,11 +22,11 @@ public:
     int ms2_pin);
 
   // Public instance variables
-  
+  bool continuous;
 
   // Public functions
   void step(unsigned long steps);
-  void set_direction(bool dir);
+  void set_direction(int dir);
     
 
 private:
@@ -35,7 +35,7 @@ private:
   int enable_pin;
   int ms1_pin;
   int ms2_pin;
-  bool direction;
+  int direction;
   signed long number_of_steps;
   MicrostepMode_t microstep_mode;
 

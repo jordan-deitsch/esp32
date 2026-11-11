@@ -11,9 +11,6 @@ int minUs = 1000;
 int maxUs = 2000;
 int pos = 0;      // servo position in degrees
 
-BipolarStepper bipolar_stepper(STEP_PIN, DIR_PIN, ENABLE_PIN, MS1_PIN, MS2_PIN);
-UnipolarStepper unipolar_stepper(COIL_A_PIN, COIL_B_PIN, COIL_C_PIN, COIL_D_PIN);
-
 void setup() {
   // Allow allocation of all timers
 	ESP32PWM::allocateTimer(0);
@@ -44,12 +41,14 @@ void loop() {
   //      Serial.print("Servo angle: ");
   //      Serial.println(angle);
   //   }
-    
-  //   bipolar_stepper.step(500);
   // }
 
   // // Step unipolar stepper
   // unipolar_stepper.step(1);
+
+  if(bipolar_stepper.continuous) bipolar_stepper.step(1);
+  if(unipolar_stepper.continuous) unipolar_stepper.step(1);
+  
   delay(10);
 
 }

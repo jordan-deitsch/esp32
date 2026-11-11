@@ -15,6 +15,7 @@ BipolarStepper::BipolarStepper(
 
   // Initialize step counter
   number_of_steps = 0;
+  continuous = false;
 
   // Set pin mode for all control pins
   pinMode(step_pin, OUTPUT);
@@ -23,16 +24,18 @@ BipolarStepper::BipolarStepper(
   pinMode(ms1_pin, OUTPUT);
   pinMode(ms2_pin, OUTPUT);
 
-  set_direction(true); // Set default direction
+  set_direction(1); // Set default direction
   set_microstep_mode(e_Stepper_FullStep); // Set default mode
   digitalWrite(enable_pin, LOW);  // Active low enable
 }
 
 
 // Set motor direction
-void BipolarStepper::set_direction(bool dir) {
+void BipolarStepper::set_direction(int dir) {
   direction = dir;
-  digitalWrite(dir_pin, direction);
+  if (direction == 1) digitalWrite(dir_pin, HIGH);
+  else if (direction == -1) digitalWrite(dir_pin, LOW);
+  else Serial.println("ERROR: Stepper motor invalid direction");
 }
 
 
@@ -45,8 +48,8 @@ void BipolarStepper::step(unsigned long steps) {
     digitalWrite(step_pin, LOW);
     delayMicroseconds(500);
 
-    if (direction) number_of_steps++;
-    else number_of_steps--;
+    // Inrement step counter for absolute position measurement
+    number_of_steps = number_of_steps + direction;
   }
 }
 

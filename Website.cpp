@@ -26,9 +26,15 @@ void motorStart(int motor, int direction)
     Serial.print(" START - Direction: ");
     Serial.println(direction);
 
-    // Example:
-    // motor1.setDirection(direction);
-    // motor1.enable();
+    // Motor driver settings:
+    if (motor == 1) {
+        bipolar_stepper.set_direction(direction);
+        bipolar_stepper.continuous = true;
+    }
+    else if (motor == 2) {
+        unipolar_stepper.set_direction(direction);
+        unipolar_stepper.continuous = true;
+    }
 }
 
 void motorStop(int motor)
@@ -37,8 +43,13 @@ void motorStop(int motor)
     Serial.print(motor);
     Serial.println(" STOP");
 
-    // Example:
-    // motor1.disable();
+    // Motor driver settings:
+    if (motor == 1) {
+        bipolar_stepper.continuous = false;
+    }
+    else if (motor == 2) {
+        unipolar_stepper.continuous = false;
+    }
 }
 
 // ==========================================
@@ -175,7 +186,7 @@ void handleMotor()
     int direction = server.arg("dir").toInt();
 
     if (motor < 1 || motor > 2 ||
-        (direction != 1 && direction != -1)) {
+        (direction != -1 && direction != 1)) {
 
         server.send(400, "text/plain", "Invalid motor command");
         return;
